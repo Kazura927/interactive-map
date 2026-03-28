@@ -1,0 +1,68 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; 
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+.contenedor-global {
+    width: 100%;
+    height: 100vh; /* Ocupa toda la pantalla */
+    overflow: hidden; /* IMPORTANTE: para que el mapa no se salga del cuadro al hacer zoom */
+    position: relative;
+}
+
+#map-svg { width: 100%; height: 100%; }
+
+path {
+    fill: #ececec;
+    stroke: #000000;
+    stroke-width: 0.2px;
+    transition:fill 0.15s ease-in-out;
+    transform-box: fill-box; 
+    transform-origin: center;
+    cursor: pointer;
+} path.activo { fill: #123959; }
+
+.card {
+  position: fixed;
+  top: 5%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.3);
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  text-align: left;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.card img {
+  width: 100%;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.card button {
+  position: relative; /* ya no necesitamos absolute si está en header */
+  background: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.hidden { display: none; }
