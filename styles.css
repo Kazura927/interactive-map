@@ -40,6 +40,8 @@ path {
   opacity: 0;
   transition: opacity 0.3s ease;
   text-align: left;
+  cursor: grab;
+  user-select: none;
 }
 
 .card-header {

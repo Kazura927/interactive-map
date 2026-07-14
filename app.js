@@ -14,6 +14,10 @@ const cerrarBtn = document.getElementById("cerrar");
 
 const API_KEY = "rc_live_8adac52bf71d4ec2b12d7baf7db9d21c";
 
+let moviendo = false;
+let offsetX = 0;
+let offsetY = 0;
+
 paises.forEach((pais) => {
 	pais.addEventListener("click", () => {
 		const nombrePais = pais.getAttribute("name");
@@ -120,6 +124,36 @@ paises.forEach((pais) => {
 	pais.addEventListener("mouseleave", () => {
 		pais.classList.remove("activo");
 	});
+});
+
+card.addEventListener("mousedown", (e) => {
+    // Evita que al apretar el botón de cerrar empiece a arrastrar
+    if (e.target === cerrarBtn) return;
+
+    moviendo = true;
+
+    const rect = card.getBoundingClientRect();
+
+    offsetX = e.clientX - rect.left;
+    offsetY = e.clientY - rect.top;
+
+    card.style.left = rect.left + "px";
+    card.style.top = rect.top + "px";
+    card.style.transform = "none";
+
+    card.style.cursor = "grabbing";
+});
+
+document.addEventListener("mousemove", (e) => {
+    if (!moviendo) return;
+
+    card.style.left = `${e.clientX - offsetX}px`;
+    card.style.top = `${e.clientY - offsetY}px`;
+});
+
+document.addEventListener("mouseup", () => {
+    moviendo = false;
+    card.style.cursor = "grab";
 });
 
 // mapa manejable - libreria svg-pan-zoom
