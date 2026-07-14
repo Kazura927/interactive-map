@@ -12,6 +12,8 @@ const banderaElem = document.getElementById("bandera");
 
 const cerrarBtn = document.getElementById("cerrar");
 
+const API_KEY = "rc_live_8adac52bf71d4ec2b12d7baf7db9d21c";
+
 paises.forEach((pais) => {
 	pais.addEventListener("click", () => {
 		const nombrePais = pais.getAttribute("name");
@@ -21,60 +23,94 @@ paises.forEach((pais) => {
 
 async function obtenerDatosPais(nombrePais) {
 	try {
-		const response = await fetch(`https://restcountries.com/v3.1/name/${nombrePais}?fullText=true`);
+		const response = await fetch(
+			`https://api.restcountries.com/countries/v5?q=${encodeURIComponent(nombrePais)}`,
+			{
+				headers: {
+					Authorization: `Bearer ${API_KEY}`,
+				},
+			}
+		);
+
 		const data = await response.json();
-        const info = data[0];
+		const info = data.data.objects[0];
 
-        console.log(info);
+		
+		console.log(info);
 
-        nombrePaisElem.textContent = info.name.common;
-        capitalElem.innerHTML = '<strong>Capital: </strong>'+ (info.capital?.[0] || 'N/A');
-        poblacionElem.innerHTML = '<strong>Población: </strong>'+ info.population.toLocaleString();
-        continentElem.innerHTML = '<strong>Continente: </strong>'+ (info.continents[0] || "N/A");
+		nombrePaisElem.textContent = info.names.common;
 
-        const monedas = info.currencies ? Object.values(info.currencies).map(m => `${m.name} (${m.symbol})`).join(", ") : "N/A";
-        monedaElem.innerHTML = "<strong>Moneda: </strong>" + monedas;
+		capitalElem.innerHTML =
+			"<strong>Capital: </strong>" +
+			(info.capitals?.[0]?.name || "N/A");
 
-        const idiomas = info.languages ? Object.values(info.languages).join(", ") : "N/A";
-        idiomasElem.innerHTML = "<strong>Idiomas: </strong>" + idiomas;
+		poblacionElem.innerHTML =
+			"<strong>Población: </strong>" +
+			info.population.toLocaleString();
 
-        fronterasElem.innerHTML = "<strong>Fronteras: </strong>" + (info.borders?.join(", ") || "Ninguna");
-        banderaElem.src = info.flags.svg;
-        banderaElem.alt = `Bandera de ${info.name.common}`;
+		continentElem.innerHTML =
+			"<strong>Continente: </strong>" +
+			(info.continent || "N/A");
 
-        card.classList.remove("hidden");
-        anime({
-            targets: card,
-            scale: [0.8, 1],
-            opacity: [0, 1],
-            duration: 300,
-            easing: 'easeOutQuad'
-        });
+		const monedas = info.currencies
+			? info.currencies
+					.map((m) =>
+						m.symbol
+							? `${m.name} (${m.symbol})`
+							: m.name
+					)
+					.join(", ")
+			: "N/A";
 
+		monedaElem.innerHTML =
+			"<strong>Moneda: </strong>" + monedas;
+
+		const idiomas = info.languages
+			? info.languages.map((l) => l.name).join(", ")
+			: "N/A";
+
+		idiomasElem.innerHTML =
+			"<strong>Idiomas: </strong>" + idiomas;
+
+		fronterasElem.innerHTML =
+			"<strong>Fronteras: </strong>" +
+			(info.borders?.join(", ") || "Ninguna");
+
+		banderaElem.src = info.flag.url_png;
+		banderaElem.alt = `Bandera de ${info.names.common}`;
+
+		card.classList.remove("hidden");
+
+		anime({
+			targets: card,
+			scale: [0.8, 1],
+			opacity: [0, 1],
+			duration: 300,
+			easing: "easeOutQuad",
+		});
 	} catch (error) {
-		console.error("Error al obtener datos del pais: ", error);
+		console.error("Error al obtener datos del país:", error);
 	}
 }
 
 cerrarBtn.addEventListener("click", () => {
-  anime({
-    targets: card,
-    scale: [1, 0.8],
-    opacity: [1, 0],
-    duration: 300,
-    easing: 'easeOutQuad',
-    complete: () => {
-      card.classList.add("hidden");
-    }
-  });
+	anime({
+		targets: card,
+		scale: [1, 0.8],
+		opacity: [1, 0],
+		duration: 300,
+		easing: "easeOutQuad",
+		complete: () => {
+			card.classList.add("hidden");
+		},
+	});
 });
 
 paises.forEach((pais) => {
 	pais.addEventListener("mouseenter", () => {
-		paises.forEach((p) => p.classList.remove("activo")); // limpieza
+		paises.forEach((p) => p.classList.remove("activo"));
 
 		if (pais !== pais.parentNode.lastElementChild) {
-			// evita mover al pedo el elemento para arriba
 			pais.parentNode.appendChild(pais);
 		}
 
@@ -97,10 +133,7 @@ var panZoomMap = svgPanZoom("#map-svg", {
 	mouseWheelZoomEnabled: true,
 
 	beforePan: function (oldPan, newPan) {
-		// funcion para bloquear el arrastre
-		var stopHorizontal = false,
-			stopVertical = false,
-			gutterWidth = 100,
+		var gutterWidth = 100,
 			gutterHeight = 100,
 			sizes = this.getSizes(),
 			leftLimit = -(sizes.viewBox.width * sizes.realZoom - gutterWidth),

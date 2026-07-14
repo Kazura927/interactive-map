@@ -9,8 +9,8 @@ html, body {
 
 .contenedor-global {
     width: 100%;
-    height: 100vh; /* Ocupa toda la pantalla */
-    overflow: hidden; /* IMPORTANTE: para que el mapa no se salga del cuadro al hacer zoom */
+    height: 100vh;
+    overflow: hidden;
     position: relative;
 }
 
@@ -56,7 +56,7 @@ path {
 }
 
 .card button {
-  position: relative; /* ya no necesitamos absolute si está en header */
+  position: relative;
   background: #e74c3c;
   color: white;
   border: none;
