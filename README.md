@@ -28,6 +28,10 @@ Each selected country displays useful information fetched in real time from the 
 - Anime.js
 - svg-pan-zoom
 
+## 📷 Preview
+
+![Preview](preview.png)
+
 ## Live Demo
 
 https://thomas-centurion.github.io/interactive-map/
